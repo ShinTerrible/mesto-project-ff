@@ -17,15 +17,16 @@ function createCard(cardElement) {
     cardTemplateContent
         .querySelector(".card__image")
         .setAttribute("src", cardElement.link);
+    cardTemplateContent
+        .querySelector(".card__image")
+        .setAttribute("alt", cardElement.name);
 
     // вызов функции удаления карточки
-    let cardToDelete = cardList.querySelectorAll(".card__delete-button");
-
-    cardToDelete.forEach((elem) => {
-        elem.addEventListener("click", (event) => {
+    cardTemplateContent
+        .querySelector(".card__delete-button")
+        .addEventListener("click", (event) => {
             removeCard(event);
         });
-    });
     return cardTemplateContent;
 }
 
@@ -33,9 +34,9 @@ function addCard() {
     if (initialCards.length - 1 < cardsIndex) {
         return;
     }
-    let cardElement = initialCards[cardsIndex];
+    const cardElement = initialCards[cardsIndex];
     cardsIndex += 1;
-    let cardTemplateContent = createCard(cardElement);
+    const cardTemplateContent = createCard(cardElement);
     cardList.append(cardTemplateContent);
 }
 
@@ -51,6 +52,6 @@ addButton.addEventListener("click", () => {
 
 // @todo: Вывести карточки на страницу
 initialCards.forEach((cardElement) => {
-    let cardTemplateContent = createCard(cardElement);
+    const cardTemplateContent = createCard(cardElement);
     cardList.append(cardTemplateContent);
 });
