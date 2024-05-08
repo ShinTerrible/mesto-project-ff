@@ -1,46 +1,52 @@
-import { initialCards } from "./cards";
-import { createCard, deleteCard } from "./card";
+import { createCard, deleteCard, addLike } from "./card";
+import { closeModal } from "./modal";
 
-const formElement = document.forms.editProfile;
-const nameInput = formElement.querySelector(".popup__input_type_name");
-const jobInput = formElement.querySelector(".popup__input_type_description");
-
+const formEditProfile = document.forms.editProfile;
+const editProfilName = formEditProfile.querySelector(".popup__input_type_name");
+const editProfilJob = formEditProfile.querySelector(
+    ".popup__input_type_description"
+);
 const formAddImgCard = document.forms.newPlace;
 const imgTitle = formAddImgCard.elements.placeName;
 const imgUrl = formAddImgCard.elements.link;
 
+// Инпуты заполненны текущей информацие с уже готового профиля, они могут редактироваться и перезаписываться.
+// Из задания: 4. Редактирование имени и информации о себе
+// При открытии формы поля «Имя» и «О себе» должны быть заполнены теми значениями, которые отображаются на странице.
+// Исходя из указаний задания, поля уже должны быть с текущей информацией при открытии попапа
 let name = document.querySelector(".profile__title");
 let job = document.querySelector(".profile__description");
-nameInput.value = name.textContent;
-jobInput.value = job.textContent;
+editProfilName.value = name.textContent;
+editProfilJob.value = job.textContent;
 
 // Форма редактирования профия
-function handleFormSubmit(evt) {
-    evt.preventDefault();
+function editProfilFormSubmit(event) {
+    event.preventDefault();
 
-    name.textContent = nameInput.value;
-    job.textContent = jobInput.value;
+    name.textContent = editProfilName.value;
+    job.textContent = editProfilJob.value;
 
-    evt.target.closest(".popup_type_edit").classList.remove("popup_is-opened");
+    closeModal();
 }
 
 // Форма добавления новой карточки
-function addNewImageCard(evt) {
-    evt.preventDefault();
-
-    initialCards.unshift({ name: imgTitle.value, link: imgUrl.value });
+function addNewImageCard(event) {
+    event.preventDefault();
 
     let newElem = createCard(
         { name: imgTitle.value, link: imgUrl.value },
-        { deleteCard }
+        { deleteCard, addLike }
     );
 
     document.querySelector(".places__list").prepend(newElem);
-    imgTitle.value = "";
-    imgUrl.value = "";
-    evt.target
-        .closest(".popup_type_new-card")
-        .classList.remove("popup_is-opened");
+    formAddImgCard.reset();
+
+    closeModal();
 }
 
-export { formElement, handleFormSubmit, formAddImgCard, addNewImageCard };
+export {
+    formEditProfile,
+    editProfilFormSubmit,
+    formAddImgCard,
+    addNewImageCard,
+};

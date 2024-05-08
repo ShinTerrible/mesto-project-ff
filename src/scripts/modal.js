@@ -6,44 +6,48 @@ const popupTypeImage = document.querySelector(".popup_type_image");
 
 // Открытие модального окна
 function openModal(event) {
-    let elem;
-
     if (event.target === addButton) {
-        elem = popupNewCard;
+        event = popupNewCard;
     } else if (event.target === editButton) {
-        elem = popupEdit;
-    } else if (event.target.className === "card__image") {
-        elem = popupTypeImage;
-        let image = popupTypeImage.querySelector(".popup__image");
-        image.setAttribute("src", event.target.src);
-        image.setAttribute("alt", event.target.alt);
-        elem.querySelector(".popup__caption").textContent = event.target.alt;
+        event = popupEdit;
     }
 
-    elem.classList.add("popup_is-opened");
-
-    closeModal(elem);
+    event.classList.add("popup_is-opened");
 }
 
-// Закрытие модального окна
-function closeModal(evt) {
-    let closeButton = evt.querySelector(".popup__close");
-    closeButton.addEventListener("click", () => {
-        evt.classList.remove("popup_is-opened");
-    });
-
-    window.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            evt.classList.remove("popup_is-opened");
-        }
-    });
-
-    let popup = document.querySelector(`.popup.${evt.classList[1]}`);
-    popup.addEventListener("click", (event) => {
-        if (event.target === evt) {
-            evt.classList.remove("popup_is-opened");
-        }
-    });
+// Функция открытия попапа картинки вынесена отдельно и передана в card.js
+// по заданияю: Функцию, которая обрабатывает клик по изображению, нужно, как и лайк,
+// передать аргументом в функцию создания карточки.
+function openImageModal(event) {
+    const image = popupTypeImage.querySelector(".popup__image");
+    popupTypeImage.classList.add("popup_is-opened");
+    image.setAttribute("src", event.target.src);
+    image.setAttribute("alt", event.target.alt);
+    popupTypeImage.querySelector(".popup__caption").textContent =
+        event.target.alt;
 }
 
-export { addButton, editButton, openModal };
+// Функции закрытия модального окна
+function closeModal() {
+    document
+        .querySelector(".popup_is-opened")
+        .classList.remove("popup_is-opened");
+}
+
+function closePopupByEsc(event) {
+    if (event.key === "Escape") closeModal();
+}
+
+function closePopupByOverlay(event) {
+    if (event.target === event.currentTarget) closeModal();
+}
+
+export {
+    addButton,
+    editButton,
+    openModal,
+    openImageModal,
+    closeModal,
+    closePopupByEsc,
+    closePopupByOverlay,
+};

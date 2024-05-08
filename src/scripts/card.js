@@ -1,32 +1,31 @@
-import { openModal } from "./modal";
+import { openImageModal } from "./modal";
 
 // Темплейт карточки
 const cardTemplate = document.querySelector("#card-template").content;
 
-// @todo: Функция создания карточки
-export function createCard(cardElement, { deleteCard }) {
+//  Функция создания карточки
+export function createCard(cardElement, { deleteCard, addLike }) {
     const cardTemplateContent = cardTemplate
         .querySelector(".places__item")
         .cloneNode(true);
 
     cardTemplateContent.querySelector(".card__title").textContent =
         cardElement.name;
+
     let cardNmae = cardTemplateContent.querySelector(".card__image");
     cardNmae.setAttribute("src", cardElement.link);
     cardNmae.setAttribute("alt", cardElement.name);
 
-    //Отслеживание событий попап
-    cardNmae.addEventListener("click", openModal);
+    //Отслеживание событий попапов открывающих карточку с картинкой
+    cardNmae.addEventListener("click", openImageModal);
 
     // вызов функции удаления карточки
     cardTemplateContent
         .querySelector(".card__delete-button")
-        .addEventListener("click", (event) => {
-            deleteCard(event);
-        });
+        .addEventListener("click", deleteCard);
 
     //кнопка лайк
-    let likeButton = cardTemplateContent.querySelector(".card__like-button");
+    const likeButton = cardTemplateContent.querySelector(".card__like-button");
     likeButton.addEventListener("click", (event) => {
         addLike(event);
     });
@@ -40,6 +39,6 @@ export function deleteCard(event) {
 }
 
 // Функция добавления лайка
-function addLike(evt) {
+export function addLike(evt) {
     evt.target.classList.toggle("card__like-button_is-active");
 }
