@@ -4,7 +4,6 @@ import {
     addButton,
     editButton,
     openModal,
-    openImageModal,
     closeModal,
     closePopupByOverlay,
 } from "./modal";
@@ -26,6 +25,18 @@ import { createCard, deleteCard, addLike } from "./card.js";
 const cardList = document.querySelector(".places__list");
 const closeButton = document.querySelectorAll(".popup__close");
 const popup = document.querySelectorAll(".popup");
+const popupTypeImage = document.querySelector(".popup_type_image");
+
+// "Файл должен быть в index.js"
+// Функция открытия попапа картинки вынесена отдельно и передана в card.js
+export function openImageModal(event) {
+    const image = popupTypeImage.querySelector(".popup__image");
+    openModal(popupTypeImage);
+    image.setAttribute("src", event.target.src);
+    image.setAttribute("alt", event.target.alt);
+    popupTypeImage.querySelector(".popup__caption").textContent =
+        event.target.alt;
+}
 
 // Выведение карточек при загрузки страницы
 initialCards.forEach((cardElement) => {

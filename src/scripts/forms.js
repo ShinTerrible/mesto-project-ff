@@ -1,5 +1,6 @@
 import { createCard, deleteCard, addLike } from "./card";
-import { closeModal, openImageModal } from "./modal";
+import { closeModal } from "./modal";
+import { openImageModal } from "./script";
 
 const formEditProfile = document.forms.editProfile;
 const editProfilName = formEditProfile.querySelector(".popup__input_type_name");
@@ -28,7 +29,7 @@ function editProfilFormSubmit(event) {
 function addNewImageCard(event) {
     event.preventDefault();
 
-    let newElem = createCard(
+    const newElem = createCard(
         { name: imgTitle.value, link: imgUrl.value },
         { deleteCard, addLike, openImageModal }
     );
