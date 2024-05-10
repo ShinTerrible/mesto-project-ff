@@ -1,23 +1,18 @@
 import { createCard, deleteCard, addLike } from "./card";
-import { closeModal } from "./modal";
+import { closeModal, openImageModal } from "./modal";
 
 const formEditProfile = document.forms.editProfile;
 const editProfilName = formEditProfile.querySelector(".popup__input_type_name");
 const editProfilJob = formEditProfile.querySelector(
     ".popup__input_type_description"
 );
+const popupEdit = document.querySelector(".popup_type_edit");
+const popupNewCard = document.querySelector(".popup_type_new-card");
 const formAddImgCard = document.forms.newPlace;
 const imgTitle = formAddImgCard.elements.placeName;
 const imgUrl = formAddImgCard.elements.link;
-
-// Инпуты заполненны текущей информацие с уже готового профиля, они могут редактироваться и перезаписываться.
-// Из задания: 4. Редактирование имени и информации о себе
-// При открытии формы поля «Имя» и «О себе» должны быть заполнены теми значениями, которые отображаются на странице.
-// Исходя из указаний задания, поля уже должны быть с текущей информацией при открытии попапа
-let name = document.querySelector(".profile__title");
-let job = document.querySelector(".profile__description");
-editProfilName.value = name.textContent;
-editProfilJob.value = job.textContent;
+const name = document.querySelector(".profile__title");
+const job = document.querySelector(".profile__description");
 
 // Форма редактирования профия
 function editProfilFormSubmit(event) {
@@ -26,7 +21,7 @@ function editProfilFormSubmit(event) {
     name.textContent = editProfilName.value;
     job.textContent = editProfilJob.value;
 
-    closeModal();
+    closeModal(popupEdit);
 }
 
 // Форма добавления новой карточки
@@ -35,13 +30,13 @@ function addNewImageCard(event) {
 
     let newElem = createCard(
         { name: imgTitle.value, link: imgUrl.value },
-        { deleteCard, addLike }
+        { deleteCard, addLike, openImageModal }
     );
 
     document.querySelector(".places__list").prepend(newElem);
     formAddImgCard.reset();
 
-    closeModal();
+    closeModal(popupNewCard);
 }
 
 export {
@@ -49,4 +44,10 @@ export {
     editProfilFormSubmit,
     formAddImgCard,
     addNewImageCard,
+    editProfilName,
+    editProfilJob,
+    name,
+    job,
+    popupEdit,
+    popupNewCard,
 };

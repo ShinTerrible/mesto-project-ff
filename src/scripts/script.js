@@ -4,8 +4,8 @@ import {
     addButton,
     editButton,
     openModal,
+    openImageModal,
     closeModal,
-    closePopupByEsc,
     closePopupByOverlay,
 } from "./modal";
 import {
@@ -13,6 +13,12 @@ import {
     editProfilFormSubmit,
     formAddImgCard,
     addNewImageCard,
+    editProfilName,
+    editProfilJob,
+    name,
+    job,
+    popupEdit,
+    popupNewCard,
 } from "./forms.js";
 import { createCard, deleteCard, addLike } from "./card.js";
 
@@ -26,32 +32,30 @@ initialCards.forEach((cardElement) => {
     const cardTemplateContent = createCard(cardElement, {
         deleteCard,
         addLike,
+        openImageModal,
     });
     cardList.append(cardTemplateContent);
 });
 
 // Отслеживание событий Открытия попап
 // // открытие попапа редактирования
-editButton.addEventListener("click", (event) => {
-    openModal(event);
+editButton.addEventListener("click", () => {
+    editProfilName.value = name.textContent;
+    editProfilJob.value = job.textContent;
+    openModal(popupEdit);
 });
 
 // // открытие попапа добавления карточки
-addButton.addEventListener("click", (event) => {
-    openModal(event);
+addButton.addEventListener("click", () => {
+    openModal(popupNewCard);
 });
 
 // Отслеживание событий Закрытия попап
 // // Закрытие по кнопке х
 closeButton.forEach((elem) => {
     elem.addEventListener("click", () => {
-        closeModal();
+        closeModal(elem.closest(".popup"));
     });
-});
-
-// // Закрытие по кнопке ESC
-window.addEventListener("keydown", (event) => {
-    closePopupByEsc(event);
 });
 
 // // Закрытие по оверлею

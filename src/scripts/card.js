@@ -1,10 +1,11 @@
-import { openImageModal } from "./modal";
-
 // Темплейт карточки
 const cardTemplate = document.querySelector("#card-template").content;
 
 //  Функция создания карточки
-export function createCard(cardElement, { deleteCard, addLike }) {
+export function createCard(
+    cardElement,
+    { deleteCard, addLike, openImageModal }
+) {
     const cardTemplateContent = cardTemplate
         .querySelector(".places__item")
         .cloneNode(true);
@@ -12,12 +13,12 @@ export function createCard(cardElement, { deleteCard, addLike }) {
     cardTemplateContent.querySelector(".card__title").textContent =
         cardElement.name;
 
-    let cardNmae = cardTemplateContent.querySelector(".card__image");
-    cardNmae.setAttribute("src", cardElement.link);
-    cardNmae.setAttribute("alt", cardElement.name);
+    const cardName = cardTemplateContent.querySelector(".card__image");
+    cardName.setAttribute("src", cardElement.link);
+    cardName.setAttribute("alt", cardElement.name);
 
     //Отслеживание событий попапов открывающих карточку с картинкой
-    cardNmae.addEventListener("click", openImageModal);
+    cardName.addEventListener("click", openImageModal);
 
     // вызов функции удаления карточки
     cardTemplateContent
