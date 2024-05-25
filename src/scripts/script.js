@@ -1,5 +1,5 @@
 import "../pages/index.css";
-import { initialCards } from "./cards";
+import "./cards";
 import {
     addButton,
     editButton,
@@ -12,14 +12,27 @@ import {
     editProfilFormSubmit,
     formAddImgCard,
     addNewImageCard,
-    editProfilName,
-    editProfilJob,
-    name,
-    job,
+    formEditProfilName,
+    formEditProfilDescription,
+    profileName,
+    profileDescription,
     popupEdit,
     popupNewCard,
+    formImgTitle,
+    formImgUrl,
+    initProfileFields,
+    profileImage,
+    formNewAvatar,
+    popupAvatar,
+    editAvatar,
 } from "./forms.js";
-import { createCard, deleteCard, addLike } from "./card.js";
+import { createCard, addLike } from "./create_card.js";
+import {
+    validationConfig,
+    enableValidation,
+    clearValidation,
+} from "./validation.js";
+import { dataConfig, getData } from "./api.js";
 
 // DOM узлы
 const cardList = document.querySelector(".places__list");
@@ -38,27 +51,49 @@ export function openImageModal(event) {
         event.target.alt;
 }
 
-// Выведение карточек при загрузки страницы
-initialCards.forEach((cardElement) => {
-    const cardTemplateContent = createCard(cardElement, {
-        deleteCard,
-        addLike,
-        openImageModal,
-    });
-    cardList.append(cardTemplateContent);
+Promise.all([
+    getData(dataConfig.cardUrl),
+    getData(dataConfig.userDataUrl),
+]).then((responsesData) => {
+    // Выведение карточек при загрузке страницы
+    const [cardData, userData] = responsesData;
+    cardData
+        .forEach((cardElement) => {
+            const cardTemplateContent = createCard(cardElement, {
+                addLike,
+                openImageModal,
+            });
+            cardList.append(cardTemplateContent);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+
+    // Инициализация данных профиля при загрузке страницы
+    initProfileFields(userData);
 });
 
 // Отслеживание событий Открытия попап
 // // открытие попапа редактирования
 editButton.addEventListener("click", () => {
-    editProfilName.value = name.textContent;
-    editProfilJob.value = job.textContent;
+    formEditProfilName.value = profileName.textContent;
+    formEditProfilDescription.value = profileDescription.textContent;
     openModal(popupEdit);
+    clearValidation(popupEdit, validationConfig);
 });
 
 // // открытие попапа добавления карточки
 addButton.addEventListener("click", () => {
+    formImgTitle.value = "";
+    formImgUrl.value = "";
     openModal(popupNewCard);
+    clearValidation(popupNewCard, validationConfig);
+});
+
+// // открытие попапа обновления аватара
+profileImage.addEventListener("click", () => {
+    openModal(popupAvatar);
+    clearValidation(popupAvatar, validationConfig);
 });
 
 // Отслеживание событий Закрытия попап
@@ -79,3 +114,6 @@ popup.forEach((popupElem) => {
 // Отслеживание событий форм
 formEditProfile.addEventListener("submit", editProfilFormSubmit);
 formAddImgCard.addEventListener("submit", addNewImageCard);
+formNewAvatar.addEventListener("submit", editAvatar);
+//функция валидации форм
+enableValidation(validationConfig);
