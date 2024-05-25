@@ -40,8 +40,6 @@ const closeButton = document.querySelectorAll(".popup__close");
 const popup = document.querySelectorAll(".popup");
 const popupTypeImage = document.querySelector(".popup_type_image");
 
-
-// Функция открытия попапа картинки 
 export function openImageModal(event) {
     const image = popupTypeImage.querySelector(".popup__image");
     openModal(popupTypeImage);
@@ -110,6 +108,5 @@ popup.forEach((popupElem) => {
 formEditProfile.addEventListener("submit", editProfilFormSubmit);
 formAddImgCard.addEventListener("submit", addNewImageCard);
 formNewAvatar.addEventListener("submit", editAvatar);
-
 //функция валидации форм
 enableValidation(validationConfig);

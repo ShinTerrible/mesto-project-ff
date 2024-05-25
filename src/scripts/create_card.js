@@ -30,6 +30,11 @@ function createCard(cardElement, { addLike, openImageModal }) {
     // Отображение иконки Удаления карточки
     shouldDisplayDeleteButton(cardElement, cardTemplateContent);
 
+    //Отслеживание событий попапов открывающих карточку с картинкой
+    cardName.addEventListener("click", openImageModal);
+
+    //кнопка лайк
+    const likeButton = cardTemplateContent.querySelector(".card__like-button");
     if (
         cardElement.likes.length === 0 ||
         cardElement.likes.length === undefined
@@ -39,12 +44,6 @@ function createCard(cardElement, { addLike, openImageModal }) {
         cardCounter.style.display = "block";
         cardCounter.textContent = cardElement.likes.length;
     }
-
-    //Отслеживание событий попапов открывающих карточку с картинкой
-    cardName.addEventListener("click", openImageModal);
-
-    //кнопка лайк
-    const likeButton = cardTemplateContent.querySelector(".card__like-button");
 
     // Отображения количества лайков
     cardElement.likes.forEach((elem) => {
@@ -77,26 +76,28 @@ async function addLike(event) {
         .closest(".card")
         .querySelector(".card__like-counter");
     if (!event.target.className.includes("card__like-button_is-active")) {
-        await putNewData(cardId, likeCounter, event);
+        await putNewLike(cardId, likeCounter, event);
     } else if (event.target.className.includes("card__like-button_is-active")) {
-        await removeData(cardId, likeCounter, event);
+        await removeLike(cardId, likeCounter, event);
     }
 }
-
-async function putNewData(cardId, likeCounter, event) {
+// // Отображение лайка
+async function putNewLike(cardId, likeCounter, event) {
     const data = await putCardData(cardId, profile);
     likeCounter.style.display = "block";
     event.target.classList.add("card__like-button_is-active");
     likeCounter.textContent = data.likes.length;
 }
 
-async function removeData(cardId, likeCounter, event) {
+// // Удаление лайка
+async function removeLike(cardId, likeCounter, event) {
     const data = await deleteLikeData(cardId, profile);
     if (data.likes.length === 0) showCounter(likeCounter);
     event.target.classList.remove("card__like-button_is-active");
     likeCounter.textContent = data.likes.length;
 }
 
+// Проверка владельца карточки
 function shouldDisplayDeleteButton(cardElement, cardTemplateContent) {
     if (cardElement.owner._id !== profile._id) return;
 
