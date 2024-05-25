@@ -1,5 +1,4 @@
 import "../pages/index.css";
-import "./cards";
 import {
     addButton,
     editButton,
@@ -26,12 +25,8 @@ import {
     popupAvatar,
     editAvatar,
 } from "./forms.js";
-import { createCard, addLike } from "./create_card.js";
-import {
-    validationConfig,
-    enableValidation,
-    clearValidation,
-} from "./validation.js";
+import { createCard, addLike, deleteCard } from "./card.js";
+import { enableValidation, clearValidation } from "./validation.js";
 import { dataConfig, getData } from "./api.js";
 
 // DOM узлы
@@ -39,6 +34,15 @@ const cardList = document.querySelector(".places__list");
 const closeButton = document.querySelectorAll(".popup__close");
 const popup = document.querySelectorAll(".popup");
 const popupTypeImage = document.querySelector(".popup_type_image");
+const validationConfig = {
+    formSelector: ".popup__form",
+    inputSelector: ".popup__input",
+    submitButtonSelector: ".popup__button",
+    inactiveButtonClass: "popup__button_disabled",
+    inputErrorClass: "popup__input_type_error",
+    errorClass: "popup__error_visible",
+};
+export const profile = null;
 
 export function openImageModal(event) {
     const image = popupTypeImage.querySelector(".popup__image");
@@ -54,9 +58,10 @@ Promise.all([getData(dataConfig.cardUrl), getData(dataConfig.userDataUrl)])
         // Выведение карточек при загрузке страницы
         const [cardData, userData] = responsesData;
         cardData.forEach((cardElement) => {
-            const cardTemplateContent = createCard(cardElement, {
+            const cardTemplateContent = createCard(cardElement, userData, {
                 addLike,
                 openImageModal,
+                deleteCard,
             });
             cardList.append(cardTemplateContent);
         });

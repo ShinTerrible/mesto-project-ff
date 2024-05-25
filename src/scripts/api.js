@@ -1,13 +1,25 @@
-// Карточки;
+const apiVersion = "v1";
+const apiHost = "https://mesto.nomoreparties.co";
+const baseUrl = `${apiHost}/${apiVersion}/wff-cohort-14`;
+
+const authToken = "c79158e2-992b-4409-beca-f89ef791073b";
+
 const dataConfig = {
-    cardUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-14/cards",
-    userDataUrl: "https://mesto.nomoreparties.co/v1/wff-cohort-14/users/me",
-    authUid: "c79158e2-992b-4409-beca-f89ef791073b",
+    cardUrl: `${baseUrl}/cards`,
+    userDataUrl: `${baseUrl}/users/me`,
+    authUid: authToken,
     headers: {
-        authorization: "c79158e2-992b-4409-beca-f89ef791073b",
+        authorization: authToken,
         "Content-Type": "application/json",
     },
 };
+
+async function handleResponse(response) {
+    if (response.ok) {
+        return await response.json();
+    }
+    return Promise.reject(`Ошибка: ${response.statusText}`);
+}
 
 // Получение данных
 async function getData(url) {
@@ -15,11 +27,7 @@ async function getData(url) {
         method: "GET",
         headers: dataConfig.headers,
     });
-    if (response.ok) {
-        return await response.json();
-    }
-
-    return Promise.reject(`Ошибка: ${response.statusText}`);
+    return handleResponse(response);
 }
 
 // Обновление данных карточки/лайка
@@ -29,10 +37,7 @@ async function editData(url, data) {
         headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
-    if (response.ok) {
-        return await response.json();
-    }
-    return Promise.reject(`Ошибка: ${response.status}`);
+    return handleResponse(response);
 }
 
 // Отправка данных новой карточки на сервер
@@ -42,11 +47,7 @@ async function postData(data) {
         headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
-    if (response.ok) {
-        return await response.json();
-    }
-
-    return Promise.reject(`Ошибка: ${response.status}`);
+    return handleResponse(response);
 }
 
 // Добавление карточки
@@ -56,11 +57,7 @@ async function putCardData(cardId, data) {
         headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
-    if (response.ok) {
-        return await response.json();
-    }
-
-    return Promise.reject(`Ошибка: ${response.status}`);
+    return handleResponse(response);
 }
 
 // Удаление лайка
@@ -70,11 +67,7 @@ async function deleteLikeData(cardId, data) {
         headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
-    if (response.ok) {
-        return await response.json();
-    }
-
-    return Promise.reject(`Ошибка: ${response.status}`);
+    return handleResponse(response);
 }
 
 // Запрос на удаление карточки
@@ -83,11 +76,7 @@ async function deleteCardData(cardId) {
         method: "DELETE",
         headers: dataConfig.headers,
     });
-    if (response.ok) {
-        return await response.json();
-    }
-
-    return Promise.reject(`Ошибка: ${response.status}`);
+    return handleResponse(response);
 }
 
 // Проверка валидности картинки

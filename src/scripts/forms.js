@@ -1,10 +1,4 @@
-import {
-    createCard,
-    deleteCard,
-    addLike,
-    profile,
-    shouldDisplayDeleteButton,
-} from "./create_card";
+import { createCard, deleteCard, addLike } from "./card";
 import { closeModal } from "./modal";
 import { openImageModal } from "./script";
 import { dataConfig, editData, postData, checkImgValidity } from "./api";
@@ -33,38 +27,44 @@ const popupAvatar = document.querySelector(".popup_type_new-avatar");
 async function editProfilFormSubmit(event) {
     event.preventDefault();
     isLoading(true, popupEdit);
-    const userData = await editData(dataConfig.userDataUrl, {
-        name: formEditProfilName.value,
-        about: formEditProfilDescription.value,
-    })
-        .catch((err) => console.log(err))
-        .finally(() => {
-            isLoading(false, popupEdit);
+    try {
+        const userData = await editData(dataConfig.userDataUrl, {
+            name: formEditProfilName.value,
+            about: formEditProfilDescription.value,
         });
-
-    // Обновление данных профиля
-    editProfileFields(userData);
-    closeModal(popupEdit);
+        // Обновление данных профиля
+        editProfileFields(userData);
+        closeModal(popupEdit);
+    } catch (error) {
+        console.log(err);
+    } finally {
+        isLoading(false, popupEdit);
+    }
 }
 
 // Функция обновления аватара
 async function editAvatar(event) {
     event.preventDefault();
     isLoading(true, popupAvatar);
-    const checkValidity = await checkImgValidity(formEditAvatar.value);
-    if (checkValidity.includes("image")) {
-        const userData = await editData(`${dataConfig.userDataUrl}/avatar`, {
-            avatar: formEditAvatar.value,
-        })
-            .catch((err) => console.log(err))
-            .finally(() => {
-                isLoading(false, popupAvatar);
-            });
+    try {
+        const checkValidity = await checkImgValidity(formEditAvatar.value);
+        if (checkValidity.includes("image")) {
+            const userData = await editData(
+                `${dataConfig.userDataUrl}/avatar`,
+                {
+                    avatar: formEditAvatar.value,
+                }
+            );
 
-        profileImage.style.backgroundImage = `url(${userData.avatar})`;
+            profileImage.style.backgroundImage = `url(${userData.avatar})`;
 
-        // Закрытие модального окна
-        closeModal(popupAvatar);
+            // Закрытие модального окна
+            closeModal(popupAvatar);
+        }
+    } catch (error) {
+        console.log(error);
+    } finally {
+        isLoading(false, popupAvatar);
     }
 }
 
@@ -84,27 +84,23 @@ function initProfileFields(userData) {
 async function addNewImageCard(event) {
     event.preventDefault();
     isLoading(true, popupNewCard);
-    const postNewCard = await postData({
-        name: formImgTitle.value,
-        link: formImgUrl.value,
-        _id: profile._id,
-    })
-        .catch((err) => console.log(err))
-        .finally(() => {
-            isLoading(false, popupNewCard);
+    try {
+        const postNewCard = await postData({
+            name: formImgTitle.value,
+            link: formImgUrl.value,
         });
-
-    const newElem = createCard(postNewCard, {
-        deleteCard,
-        addLike,
-        openImageModal,
-    });
-
-    document.querySelector(".places__list").prepend(newElem);
-    formAddImgCard.reset();
-
-    // Вызов функции отображения кнопки удаления
-    shouldDisplayDeleteButton(postNewCard, newElem);
+        const newElem = createCard(postNewCard, postNewCard.owner, {
+            addLike,
+            openImageModal,
+            deleteCard,
+        });
+        document.querySelector(".places__list").prepend(newElem);
+        formAddImgCard.reset();
+    } catch (error) {
+        console.log(error);
+    } finally {
+        isLoading(false, popupNewCard);
+    }
 
     // Закрытие модального окна
     closeModal(popupNewCard);
@@ -112,11 +108,9 @@ async function addNewImageCard(event) {
 
 // Функция ожидания сохранения
 function isLoading(isLoading, elem) {
-    if (isLoading) {
-        elem.querySelector(".popup__button").textContent = "Сохранение...";
-    } else {
-        elem.querySelector(".popup__button").textContent = "Сохранить";
-    }
+    elem.querySelector(".popup__button").textContent = isLoading
+        ? "Сохранение..."
+        : "Сохранить";
 }
 
 export {

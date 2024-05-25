@@ -1,12 +1,3 @@
-const validationConfig = {
-    formSelector: ".popup__form",
-    inputSelector: ".popup__input",
-    submitButtonSelector: ".popup__button",
-    inactiveButtonClass: "popup__button_disabled",
-    inputErrorClass: "popup__input_type_error",
-    errorClass: "popup__error_visible",
-};
-
 function hasValidInput(inputList) {
     return inputList.every((element) => {
         return element.validity.valid && element.value !== "";
@@ -59,7 +50,7 @@ function checkInputValidity(formElement, inputElement, config) {
             formElement,
             inputElement,
             inputElement.setCustomValidity(inputElement.dataset.errorMessage),
-            validationConfig
+            config
         );
     } else {
         inputElement.setCustomValidity("");
@@ -90,13 +81,13 @@ function enableValidation(config) {
 
 function clearValidation(formElement, config) {
     const form = formElement.querySelector(config.formSelector);
-    const input = Array.from(form.querySelectorAll(config.inputSelector));
+    const popupInputs = Array.from(form.querySelectorAll(config.inputSelector));
     const buttonElement = form.querySelector(config.submitButtonSelector);
-    toggleButtonState(input, buttonElement, config);
+    toggleButtonState(popupInputs, buttonElement, config);
 
-    input.forEach((elem) => {
-        hideError(form, elem, config);
+    popupInputs.forEach((popupInput) => {
+        hideError(form, popupInput, config);
     });
 }
 
-export { validationConfig, enableValidation, clearValidation };
+export { enableValidation, clearValidation };
