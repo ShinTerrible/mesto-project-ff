@@ -99,4 +99,4 @@ function clearValidation(formElement, config) {
     });
 }
 
-export { validationConfig, enableValidation, hideError, clearValidation };
+export { validationConfig, enableValidation, clearValidation };

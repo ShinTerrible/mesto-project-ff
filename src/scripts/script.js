@@ -40,8 +40,8 @@ const closeButton = document.querySelectorAll(".popup__close");
 const popup = document.querySelectorAll(".popup");
 const popupTypeImage = document.querySelector(".popup_type_image");
 
-// "Файл должен быть в index.js"
-// Функция открытия попапа картинки вынесена отдельно и передана в card.js
+
+// Функция открытия попапа картинки 
 export function openImageModal(event) {
     const image = popupTypeImage.querySelector(".popup__image");
     openModal(popupTypeImage);
@@ -51,27 +51,22 @@ export function openImageModal(event) {
         event.target.alt;
 }
 
-Promise.all([
-    getData(dataConfig.cardUrl),
-    getData(dataConfig.userDataUrl),
-]).then((responsesData) => {
-    // Выведение карточек при загрузке страницы
-    const [cardData, userData] = responsesData;
-    cardData
-        .forEach((cardElement) => {
+Promise.all([getData(dataConfig.cardUrl), getData(dataConfig.userDataUrl)])
+    .then((responsesData) => {
+        // Выведение карточек при загрузке страницы
+        const [cardData, userData] = responsesData;
+        cardData.forEach((cardElement) => {
             const cardTemplateContent = createCard(cardElement, {
                 addLike,
                 openImageModal,
             });
             cardList.append(cardTemplateContent);
-        })
-        .catch((err) => {
-            console.log(err);
         });
 
-    // Инициализация данных профиля при загрузке страницы
-    initProfileFields(userData);
-});
+        // Инициализация данных профиля при загрузке страницы
+        initProfileFields(userData);
+    })
+    .catch((err) => console.log(err));
 
 // Отслеживание событий Открытия попап
 // // открытие попапа редактирования
@@ -115,5 +110,6 @@ popup.forEach((popupElem) => {
 formEditProfile.addEventListener("submit", editProfilFormSubmit);
 formAddImgCard.addEventListener("submit", addNewImageCard);
 formNewAvatar.addEventListener("submit", editAvatar);
+
 //функция валидации форм
 enableValidation(validationConfig);

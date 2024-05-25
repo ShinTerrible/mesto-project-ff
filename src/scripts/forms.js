@@ -7,7 +7,7 @@ import {
 } from "./create_card";
 import { closeModal } from "./modal";
 import { openImageModal } from "./script";
-import { dataConfig, editProfile, postData, checkImgValidity } from "./api";
+import { dataConfig, editData, postData, checkImgValidity } from "./api";
 
 // DOM узлы
 const profileName = document.querySelector(".profile__title");
@@ -33,13 +33,11 @@ const popupAvatar = document.querySelector(".popup_type_new-avatar");
 async function editProfilFormSubmit(event) {
     event.preventDefault();
     isLoading(true, popupEdit);
-    const userData = await editProfile(dataConfig.userDataUrl, {
+    const userData = await editData(dataConfig.userDataUrl, {
         name: formEditProfilName.value,
         about: formEditProfilDescription.value,
     })
-        .catch((err) => {
-            console.log(err);
-        })
+        .catch((err) => console.log(err))
         .finally(() => {
             isLoading(false, popupEdit);
         });
@@ -55,16 +53,17 @@ async function editAvatar(event) {
     isLoading(true, popupAvatar);
     const checkValidity = await checkImgValidity(formEditAvatar.value);
     if (checkValidity.includes("image")) {
-        const userData = await editProfile(`${dataConfig.userDataUrl}/avatar`, {
+        const userData = await editData(`${dataConfig.userDataUrl}/avatar`, {
             avatar: formEditAvatar.value,
         })
-            .catch((err) => {
-                console.log(err);
-            })
+            .catch((err) => console.log(err))
             .finally(() => {
                 isLoading(false, popupAvatar);
             });
+
         profileImage.style.backgroundImage = `url(${userData.avatar})`;
+
+        // Закрытие модального окна
         closeModal(popupAvatar);
     }
 }
@@ -90,9 +89,7 @@ async function addNewImageCard(event) {
         link: formImgUrl.value,
         _id: profile._id,
     })
-        .catch((err) => {
-            console.log(err);
-        })
+        .catch((err) => console.log(err))
         .finally(() => {
             isLoading(false, popupNewCard);
         });
@@ -102,9 +99,14 @@ async function addNewImageCard(event) {
         addLike,
         openImageModal,
     });
+
     document.querySelector(".places__list").prepend(newElem);
     formAddImgCard.reset();
+
+    // Вызов функции отображения кнопки удаления
     shouldDisplayDeleteButton(postNewCard, newElem);
+
+    // Закрытие модального окна
     closeModal(popupNewCard);
 }
 

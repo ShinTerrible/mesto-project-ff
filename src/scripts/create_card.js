@@ -62,13 +62,17 @@ function createCard(cardElement, { addLike, openImageModal }) {
 // Функция удаления карточки
 async function deleteCard(event) {
     event.target.closest(".places__item").remove();
-    let cardId = event.target.closest(".card").querySelector(".card__image").id;
+    const cardId = event.target
+        .closest(".card")
+        .querySelector(".card__image").id;
     await deleteCardData(cardId);
 }
 
 // Функция добавления лайка
 async function addLike(event) {
-    let cardId = event.target.closest(".card").querySelector(".card__image").id;
+    const cardId = event.target
+        .closest(".card")
+        .querySelector(".card__image").id;
     const likeCounter = event.target
         .closest(".card")
         .querySelector(".card__like-counter");

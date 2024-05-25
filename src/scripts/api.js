@@ -13,7 +13,7 @@ const dataConfig = {
 async function getData(url) {
     const response = await fetch(url, {
         method: "GET",
-        headers: config.headers,
+        headers: dataConfig.headers,
     });
     if (response.ok) {
         return await response.json();
@@ -22,11 +22,11 @@ async function getData(url) {
     return Promise.reject(`Ошибка: ${response.statusText}`);
 }
 
-// Обновление профиля
-async function editProfile(url, data) {
+// Обновление данных карточки/лайка
+async function editData(url, data) {
     const response = await fetch(url, {
         method: "PATCH",
-        headers: config.headers,
+        headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
     if (response.ok) {
@@ -36,11 +36,10 @@ async function editProfile(url, data) {
 }
 
 // Отправка данных новой карточки на сервер
-
 async function postData(data) {
     const response = await fetch(dataConfig.cardUrl, {
         method: "POST",
-        headers: config.headers,
+        headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
     if (response.ok) {
@@ -50,10 +49,11 @@ async function postData(data) {
     return Promise.reject(`Ошибка: ${response.status}`);
 }
 
+// Добавление карточки
 async function putCardData(cardId, data) {
     const response = await fetch(`${dataConfig.cardUrl}/likes/${cardId}`, {
         method: "PUT",
-        headers: config.headers,
+        headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
     if (response.ok) {
@@ -63,10 +63,11 @@ async function putCardData(cardId, data) {
     return Promise.reject(`Ошибка: ${response.status}`);
 }
 
+// Удаление лайка
 async function deleteLikeData(cardId, data) {
     const response = await fetch(`${dataConfig.cardUrl}/likes/${cardId}`, {
         method: "DELETE",
-        headers: config.headers,
+        headers: dataConfig.headers,
         body: JSON.stringify(data),
     });
     if (response.ok) {
@@ -76,10 +77,11 @@ async function deleteLikeData(cardId, data) {
     return Promise.reject(`Ошибка: ${response.status}`);
 }
 
+// Запрос на удаление карточки
 async function deleteCardData(cardId) {
     const response = await fetch(`${dataConfig.cardUrl}/${cardId}`, {
         method: "DELETE",
-        headers: config.headers,
+        headers: dataConfig.headers,
     });
     if (response.ok) {
         return await response.json();
@@ -88,6 +90,7 @@ async function deleteCardData(cardId) {
     return Promise.reject(`Ошибка: ${response.status}`);
 }
 
+// Проверка валидности картинки
 async function checkImgValidity(imgUrl) {
     const response = await fetch(imgUrl, {
         method: "HEAD",
@@ -103,7 +106,7 @@ export {
     dataConfig,
     getData,
     postData,
-    editProfile,
+    editData,
     putCardData,
     deleteLikeData,
     deleteCardData,
