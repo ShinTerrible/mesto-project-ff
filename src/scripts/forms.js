@@ -57,6 +57,7 @@ async function editAvatar(event) {
             );
 
             profileImage.style.backgroundImage = `url(${userData.avatar})`;
+            formEditAvatar.value = "";
 
             // Закрытие модального окна
             closeModal(popupAvatar);
